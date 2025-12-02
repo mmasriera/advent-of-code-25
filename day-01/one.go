@@ -1,16 +1,15 @@
-
 package main
 
 import (
+	"fmt"
 	"mikicode/aoc25/utils"
 	"strconv"
-	"fmt"
 )
 
 func main() {
 	var zeroSum int = 0
 	var position int = 50
-	lines := utils.ReadLines("./inputs/one.txt")
+	lines := utils.ReadLines("./inputs/input.txt")
 
 	for _, line := range lines {
 		direction := line[0:1]
@@ -38,5 +37,5 @@ func main() {
 
 	fmt.Println("result:", zeroSum)
 	// test -> 3
-	// one -> 1084
+	// input -> 1084
 }
