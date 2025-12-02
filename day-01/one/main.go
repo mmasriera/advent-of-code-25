@@ -9,7 +9,7 @@ import (
 func main() {
 	var zeroSum int = 0
 	var position int = 50
-	lines := utils.ReadLines("./inputs/input.txt")
+	lines := utils.ReadLines("../inputs/input.txt")
 
 	for _, line := range lines {
 		direction := line[0:1]
