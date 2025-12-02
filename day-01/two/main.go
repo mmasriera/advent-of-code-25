@@ -13,14 +13,11 @@ func main() {
 
 	for _, line := range lines {
 		direction := line[0:1]
-		rawValue, _ := strconv.Atoi(line[1:])
+		value, _ := strconv.Atoi(line[1:])
 
-		fmt.Println("\n pos:", position, "->", line)
-
-		value := rawValue % 100
-
-		if rawValue > 99 {
-			zeroSum += rawValue / 100
+		if value > 99 {
+			zeroSum += value / 100
+			value %= 100
 		}
 
 		var nextPosition int
@@ -49,6 +46,6 @@ func main() {
 	}
 
 	fmt.Println("result:", zeroSum)
-	// test -> 6
-	// input -> [6475]
+	// test.txt -> 6
+	// input.txt -> 6475
 }
