@@ -1,9 +1,10 @@
-
 package utils
 
 import (
-	"os"
 	"bufio"
+	"fmt"
+	"os"
+	"strings"
 )
 
 func ReadLines(path string) []string {
@@ -21,4 +22,20 @@ func ReadLines(path string) []string {
 	}
 
 	return lines
+}
+
+const usageExample string = "usage: go run main.go test.txt"
+
+func GetInputPath() string {
+	if len(os.Args) < 2 {
+		panic(fmt.Sprintf("missing test file:\n%s", usageExample))
+	}
+
+	input := os.Args[1]
+
+	if !strings.HasSuffix(input, ".txt") {
+		input += ".txt"
+	}
+
+	return fmt.Sprintf("../inputs/%s", input)
 }
