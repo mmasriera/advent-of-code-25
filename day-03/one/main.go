@@ -25,7 +25,7 @@ func getMaxJoltage(bank string) int {
 		}
 	}
 
-	joltageStr := bank[idx1:idx1+1] + bank[idx2:idx2+1] // bytes -> strings
+	joltageStr := string(bank[idx1]) + string(bank[idx2])
 	result, _ := strconv.Atoi(joltageStr)
 
 	return result
