@@ -8,28 +8,10 @@ import (
 
 const BATTERIES int = 12
 
-// func joltageFn(bank string, batteriesLeft int) string {
-// 	if len(bank) == 0 {
-// 		return ""
-// 	}
-
-// 	if len(bank) > batteriesLeft + 1 {
-// 		maxIdx := 0
-// 		fmt.Println(bank, batteriesLeft, bank[:len(bank)-batteriesLeft])
-// 		for i, s := range bank[:len(bank)-batteriesLeft] {
-// 			if s > rune(bank[maxIdx]) {
-// 				maxIdx = i
-// 			}
-// 		}
-// 	}
-
-// 	return string(bank[maxIdx]) + joltageFn(bank[maxIdx+1:], batteriesLeft-1)
-// }
-
 func getLeftMax(str string) int {
-	maxIdx := -1
+	maxIdx := 0
 	for i, s := range str {
-		if s > rune(maxIdx) {
+		if s > rune(str[maxIdx]) {
 			maxIdx = i
 		}
 	}
@@ -37,14 +19,16 @@ func getLeftMax(str string) int {
 	return maxIdx
 }
 
-func getMaxJoltage(bank string) int {
-	// get the max in the digits before BATTERIES
-	startIdx := getLeftMax(bank[:len(bank)-BATTERIES+1])
-	maxJoltage := string(bank[startIdx])
+func getMaxJoltage(bank string, batteriesLeft int) string {
+	if batteriesLeft == 0 {
+		return ""
+	} else if len(bank) == batteriesLeft {
+		return bank
+	}
 
-	result, _ := strconv.Atoi(maxJoltage)
+	maxIdx := getLeftMax(bank[:len(bank)-batteriesLeft+1])
 
-	return result
+	return string(bank[maxIdx]) + getMaxJoltage(bank[maxIdx+1:], batteriesLeft-1)
 }
 
 func main() {
@@ -52,11 +36,12 @@ func main() {
 	result := 0
 
 	for _, bank := range banks {
-		maxJolatage := getMaxJoltage(bank)
+		maxJolatage := getMaxJoltage(bank, BATTERIES)
+		maxJolatageValue, _ := strconv.Atoi(maxJolatage)
 
-		result += maxJolatage
+		result += maxJolatageValue
 	}
 
 	fmt.Println("result:", result)
-	// test:357 input:17613
+	// test:3121910778619 input:175304218462560
 }
