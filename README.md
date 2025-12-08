@@ -2,6 +2,8 @@
 
 advent of code 2025
 
+no AI
+
 https://adventofcode.com/2025
 
 ```sh
