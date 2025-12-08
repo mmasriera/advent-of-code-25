@@ -19,6 +19,11 @@ func getLeftMax(str string) int {
 	return maxIdx
 }
 
+/*
+get the max value between bank[0] and bank[batteries-1] -> 1st digit at index "maxIdx"
+then from the next bank[maxIdx+1] to  bank[batteries-2], do the same -> 2nd digit and update "maxIds"
+iterate
+*/
 func getMaxJoltage(bank string, batteriesLeft int) string {
 	if batteriesLeft == 0 {
 		return ""
