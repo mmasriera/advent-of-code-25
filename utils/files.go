@@ -24,6 +24,23 @@ func ReadLines(path string) []string {
 	return lines
 }
 
+func ReadMatrix(path string) [][]rune {
+	file, err := os.Open(path)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	var matrix [][]rune
+
+	for scanner.Scan() {
+		matrix = append(matrix, []rune(scanner.Text()))
+	}
+
+	return matrix
+}
+
 const usageExample string = "usage: go run main.go test.txt"
 
 func GetInputPath() string {
