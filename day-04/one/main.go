@@ -8,13 +8,13 @@ import (
 func isAccessible(rows []string, row int, col int) bool {
 	rollCount := 0
 
-	for i := -1; i < 2; i += 1 {
+	for i := -1; i < 2; i += 1 { // -1 0 1
 		for j := -1; j < 2; j += 1 {
 			if (row+i >= 0) && (row+i < len(rows)) && (col+j >= 0) && (col+j < len(rows[row])) {
 				if rows[row+i][col+j] == '@' {
 					rollCount += 1
 
-					if rollCount > 4 {
+					if rollCount > 4 { // counting the rows[row][col] too
 						return false
 					}
 				}
