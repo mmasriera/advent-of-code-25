@@ -3,33 +3,52 @@ package main
 import (
 	"fmt"
 	"mikicode/aoc25/utils"
+	"strconv"
 	"strings"
 )
 
+// bruteforce -> 0.15s --> TO DO: improve
+
 type IdRange struct {
-	Min string
-	Max string
+	Min, Max int
+}
+
+func isInRange(rangeList []IdRange, elem int) bool {
+	for _, r := range rangeList {
+		if (elem >= r.Min) && (elem <= r.Max) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func main() {
 	rows := utils.ReadLines(utils.GetInputPath())
 	var ranges []IdRange
+	count := 0
 
-	rangesMode := true
 	for _, row := range rows {
 		if row == "" {
-			rangesMode = false
-		} else if rangesMode {
-			rangeItems := strings.Split(row, "-")
+			continue
+		}
 
-			ranges = append(ranges, IdRange{rangeItems[0], rangeItems[1]})
+		elems := strings.Split(row, "-")
 
-			fmt.Println(ranges)
-		} else if rangesMode == false {
-			fmt.Println(row)
+		switch len(elems) {
+		case 1:
+			number, _ := strconv.Atoi(elems[0])
+			if isInRange(ranges, number) {
+				count += 1
+			}
+
+		case 2:
+			min, _ := strconv.Atoi(elems[0])
+			max, _ := strconv.Atoi(elems[1])
+			ranges = append(ranges, IdRange{min, max})
 		}
 	}
 
-	fmt.Println("result:", rows)
-	// test:3 input:
+	fmt.Println("result:", count)
+	// test:3 input:638
 }
