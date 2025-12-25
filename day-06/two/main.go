@@ -6,8 +6,6 @@ import (
 	"strconv"
 )
 
-// TO DO: traverse matrix?
-
 func isEmptyColumn(matrix [][]rune, col, numRows int) bool {
 	for i := 0; i < numRows; i += 1 {
 		if matrix[i][col] != ' ' {
@@ -49,7 +47,7 @@ func main() {
 	result := 0
 
 	for j := range cols {
-		if isEmptyColumn(matrix, j, rows) {
+		if isEmptyColumn(matrix, j, rows) { // end of block (missing last block)
 			result += calculate(numbers, operation)
 			numbers = nil // reset numbers
 		}
@@ -75,7 +73,7 @@ func main() {
 		numbers = append(numbers, number)
 	}
 
-	// last operation --> TO DO: sth better
+	// last operation
 	result += calculate(numbers, operation)
 
 	fmt.Println("result:", result)
