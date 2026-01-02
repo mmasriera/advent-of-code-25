@@ -6,13 +6,9 @@ import (
 	"strings"
 )
 
-type Position struct {
-	Row, Col int
-}
-
-func appendUniquePosition(list []Position, item Position) []Position {
+func appendUniquePosition(list []int, item int) []int {
 	for _, pos := range list {
-		if (pos.Row == item.Row) && (pos.Col == item.Col) {
+		if item == pos {
 			return list
 		}
 	}
@@ -22,25 +18,25 @@ func appendUniquePosition(list []Position, item Position) []Position {
 
 func countSplits(rows []string) int {
 	count := 0
-	var items []Position // TO DO: use only the column idx --> []Position vs []int
+	var items []int
 
 	for i := range len(rows) {
 		if i == 0 {
 			startIdx := strings.Index(rows[0], "S")
-			items = append(items, Position{Row: 1, Col: startIdx})
+			items = append(items, startIdx)
 
 			continue
 		}
 
-		var newItems []Position
+		var newItems []int
 		for _, item := range items {
-			if string(rows[item.Row][item.Col]) == "^" { // split -> check if split in border?
+			if string(rows[i][item]) == "^" { // split -> check if split in border?
 				count += 1
-				newItems = appendUniquePosition(newItems, Position{Row: item.Row + 1, Col: item.Col - 1})
-				newItems = appendUniquePosition(newItems, Position{Row: item.Row + 1, Col: item.Col + 1})
+				newItems = appendUniquePosition(newItems, item-1)
+				newItems = appendUniquePosition(newItems, item+1)
 
 			} else {
-				newItems = appendUniquePosition(newItems, Position{Row: item.Row + 1, Col: item.Col})
+				newItems = appendUniquePosition(newItems, item)
 			}
 		}
 
