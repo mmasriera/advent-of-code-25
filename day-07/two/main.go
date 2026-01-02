@@ -6,39 +6,64 @@ import (
 	"strings"
 )
 
-func countSplits(rows []string) int {
-	var items []int
+type PositionCount struct {
+	Col, Value int
+}
+
+func countStep(step []PositionCount) int {
+	result := 0
+
+	for _, item := range step {
+		result += item.Value
+	}
+
+	return result
+}
+
+func appendWithSum(items []PositionCount, col int, carry int) []PositionCount {
+	for i, item := range items {
+		if item.Col == col {
+			items[i].Value += carry
+
+			return items
+		}
+	}
+
+	return append(items, PositionCount{Col: col, Value: carry})
+}
+
+// in each step, summ the overlapping paths
+func countPaths(rows []string) int {
+	var step []PositionCount
 
 	for i := range len(rows) {
-		fmt.Println(i, len(items))
 		if i == 0 {
 			startIdx := strings.Index(rows[0], "S")
-			items = append(items, startIdx)
+			step = append(step, PositionCount{Col: startIdx, Value: 1})
 
 			continue
 		}
 
-		var newItems []int
-		for _, item := range items {
-			if string(rows[i][item]) == "^" { // split -> check if split in border?
-				newItems = append(newItems, item-1)
-				newItems = append(newItems, item+1)
-
+		var newStep []PositionCount
+		for _, item := range step {
+			if string(rows[i][item.Col]) == "^" {
+				newStep = appendWithSum(newStep, item.Col-1, item.Value)
+				newStep = appendWithSum(newStep, item.Col+1, item.Value)
 			} else {
-				newItems = append(newItems, item)
+				newStep = appendWithSum(newStep, item.Col, item.Value)
 			}
 		}
 
-		items = newItems
+		step = newStep
 	}
 
-	return len(items)
+	return countStep(step)
 }
 
 func main() {
 	rows := utils.ReadLines(utils.GetInputPath())
-	result := countSplits(rows)
+	result := countPaths(rows)
 
 	fmt.Println("result:", result)
-	// test:21 input:1587
+	// test:40 input:5748679033029
 }
