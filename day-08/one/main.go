@@ -47,7 +47,8 @@ func getCombinationsCount(n int) int {
 func buildPairsWithDistance(points []string) []Pair {
 	pairs := make([]Pair, 0, getCombinationsCount(len(points)))
 
-	for _, point1 := range points {
+	for i, point1 := range points {
+		fmt.Println(i)
 		for _, point2 := range points {
 			if point1 == point2 {
 				continue
@@ -69,7 +70,11 @@ func buildPairsWithDistance(points []string) []Pair {
 func getLargestCircuits(points []string, connections int) []int {
 	pairs := buildPairsWithDistance(points)
 
-	fmt.Println(pairs)
+	// slices.SortFunc(pairs, func(a, b Pair) int {
+	// 	return cmp.Compare(a.Dist, b.Dist)
+	// })
+
+	fmt.Println(pairs[:connections])
 
 	return []int{len(pairs)}
 }
