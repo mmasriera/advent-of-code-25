@@ -10,4 +10,7 @@ https://adventofcode.com/2025
 # runing the code
 cd day-01/one
 go run main.go input.txt
+
+# running benchmarks
+go test -bench=. -benchmem
 ```
