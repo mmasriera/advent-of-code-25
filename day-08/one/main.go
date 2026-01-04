@@ -1,11 +1,7 @@
 package main
 
-// https://algs4.cs.princeton.edu/15uf/
-// https://www.geeksforgeeks.org/dsa/introduction-to-disjoint-set-data-structure-or-union-find-algorithm/
-
-// https://www.w3schools.com/dsa/dsa_algo_mst_kruskal.php
-
 import (
+	"cmp"
 	"fmt"
 	"math"
 	"mikicode/aoc25/utils"
@@ -47,42 +43,86 @@ func getCombinationsCount(n int) int {
 func buildPairsWithDistance(points []string) []Pair {
 	pairs := make([]Pair, 0, getCombinationsCount(len(points)))
 
-	for i, point1 := range points {
-		fmt.Println(i)
+	for _, point1 := range points {
 		for _, point2 := range points {
 			if point1 == point2 {
 				continue
 			}
 
-			exists := slices.ContainsFunc(pairs, func(p Pair) bool {
-				return (p.P1 == point2) && (p.P2 == point1)
-			})
-
-			if !exists {
-				pairs = append(pairs, Pair{P1: point1, P2: point2, Dist: distance(point1, point2)})
-			}
+			// it is way faster to (add all + sort + compact) than check here if the pair is in the list
+			pairs = append(pairs, Pair{P1: point1, P2: point2, Dist: distance(point1, point2)})
 		}
 	}
 
-	return pairs
+	slices.SortFunc(pairs, func(a, b Pair) int {
+		return cmp.Compare(a.Dist, b.Dist)
+	})
+
+	// remove consecutive repetitions
+	return slices.CompactFunc(pairs, func(a, b Pair) bool {
+		return a.Dist == b.Dist
+	})
 }
 
-func getLargestCircuits(points []string, connections int) []int {
+func makeCircuits(pairs []Pair) [][]Pair {
+	var circuits [][]Pair
+
+	for _, pair := range pairs {
+		idx := slices.IndexFunc(circuits, func(c []Pair) bool {
+			for _, p := range c {
+				return (p.P1 == pair.P1) || (p.P2 == pair.P2) || (p.P1 == pair.P2) || (p.P2 == pair.P1)
+			}
+
+			return false
+		})
+
+		if idx != -1 {
+			circuits[idx] = append(circuits[idx], pair)
+		} else {
+			circuits = append(circuits, []Pair{pair})
+		}
+
+	}
+
+	return circuits
+}
+
+func countNlargest(circuits [][]Pair, n int) int {
+	var sizes []int
+
+	for _, c := range circuits {
+		sizes = append(sizes, len(c))
+	}
+
+	slices.SortFunc(sizes, func(a, b int) int {
+		return b - a // sort from higher to lower
+	})
+
+	fmt.Println("sizes:", sizes)
+
+	result := 1
+
+	for _, pairCount := range sizes[:n] {
+		result *= pairCount + 1
+	}
+
+	return result
+}
+
+func getLargestCircuits(points []string, connections int) int {
 	pairs := buildPairsWithDistance(points)
 
-	// slices.SortFunc(pairs, func(a, b Pair) int {
-	// 	return cmp.Compare(a.Dist, b.Dist)
-	// })
+	circuits := makeCircuits(pairs[:connections])
 
-	fmt.Println(pairs[:connections])
+	result := countNlargest(circuits, 3)
 
-	return []int{len(pairs)}
+	return result
 }
 
 func main() {
 	rows := utils.ReadLines(utils.GetInputPath())
-	largestCircuits := getLargestCircuits(rows, 10)
+	largestCircuits := getLargestCircuits(rows, 1000)
 
 	fmt.Println("result:", largestCircuits)
-	// test:40 input:
+	// test:40 input:990 too low
 }
